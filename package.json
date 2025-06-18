@@ -30,6 +30,7 @@
     "circuit:prove": "cd circuit && bb prove -b ./target/num_diff.json -w ./target/witness.gz -o ./target --output_format bytes_and_fields --oracle_hash keccak",
     "circuit:verify": "cd circuit && bb verify -k ./target/vk -p ./target/proof --oracle_hash keccak",
     "circuit:test": "cd circuit && nargo test",
+    "deploy": "npx hardhat ignition deploy ./ignition/modules/SimpleCounter.ts --network sepolia --verify",
     "compile": "npx hardhat compile",
     "test": "npx hardhat test"
   },

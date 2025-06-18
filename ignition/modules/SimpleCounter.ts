@@ -1,7 +1,7 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
 const VerifierModule = buildModule("VerifierModule", (m) => {
-  const verifier = m.contract("HonkVerifierKeccak", [], {});
+  const verifier = m.contract("HonkVerifier", [], {});
   return { verifier };
 });
 
