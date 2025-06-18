@@ -17,14 +17,20 @@ const config: HardhatUserConfig = {
     hardhat: {
       allowUnlimitedContractSize: true,
     },
-    sepolia: {
-      url: vars.get("SEPOLIA_URL_RPC"),
-      accounts: [vars.get("SEPOLIA_PRIVATE_KEY")],
-    },
+    // Only load external network vars when not running compile/test tasks
+    ...(!(process.argv.includes('compile') || process.argv.includes('test')) && {
+      sepolia: {
+        url: vars.get("SEPOLIA_URL_RPC"),
+        accounts: [vars.get("SEPOLIA_PRIVATE_KEY")],
+      },
+    }),
   },
-  etherscan: {
-    apiKey: vars.get("ETHERSCAN_API_KEY")
-  }
+  // Only load etherscan config when needed
+  ...(!(process.argv.includes('compile') || process.argv.includes('test')) && {
+    etherscan: {
+      apiKey: vars.get("ETHERSCAN_API_KEY")
+    }
+  })
 };
 
 export default config;
