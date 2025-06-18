@@ -7,11 +7,10 @@ A comprehensive boilerplate that seamlessly integrates [Noir](https://noir-lang.
 - **🔒 Zero-Knowledge Circuit Development** - Write and test Noir circuits with full TypeScript integration
 - **⚡ Hardhat Integration** - Leverage Hardhat's powerful development environment for smart contracts
 - **🧪 Comprehensive Testing** - TypeScript tests for both circuits and smart contracts with dynamic proof generation
-- **🚀 CI/CD Pipeline** - Automated testing, building, and validation with GitHub Actions
-- **📦 Multiple Proof Formats** - Handle proofs in JSON, binary, and Solidity-compatible formats
-- **🌐 Deployment Ready** - Hardhat Ignition integration for seamless Sepolia deployment
+- **🚀 CI/CD Pipeline** - Automated testing, building, and validation
+- **📦 Multiple Proof Formats** - Handle proofs in JSON and binary
+- **🌐 Deployment Ready** - Hardhat Ignition integration for seamless deployment
 - **📋 Code Quality** - Commitlint + Husky for conventional commits and code standards
-- **🔧 Development Tools** - Hot reloading, error handling, and debugging support
 
 ## 🏗️ What You'll Learn
 
@@ -136,36 +135,39 @@ Our GitHub Actions pipeline ensures code quality and functionality across all co
 - **📝 Contract Compilation** - Compiles Solidity contracts with optimizations
 - **⚡ Integration Testing** - End-to-end tests with proof verification on contracts
 
-### **Quality Assurance**
-
-- **Parallel Execution** - Jobs run concurrently for faster feedback
-- **Artifact Caching** - Optimized build times with intelligent caching
-- **Multi-Environment** - Consistent testing across different Node.js versions
-- **Fail-Fast** - Early detection of issues with comprehensive error reporting
-
 ## 💡 Understanding the SimpleCounter Example
 
 The **SimpleCounter** demonstrates a complete ZK application workflow:
 
 ### **The Circuit** (`circuit/src/main.nr`)
 ```noir
-// Verifies that x + y = result
-fn main(x: Field, y: Field, result: pub Field) {
-    assert(x + y == result);
+fn main(x: Field, y: pub Field, z: pub Field) {
+    assert((x != y) & (y != z));
+}
+
+#[test]
+fn test_main() {
+    main(1, 2, 1);
 }
 ```
 
+This circuit implements a **uniqueness constraint verification**:
+- **Private Input** (`x`): A secret value known only to the prover
+- **Public Inputs** (`y`, `z`): Values that are publicly known and verified
+- **Constraint**: Proves that `x` is different from `y` AND `y` is different from `z`
+- **Use Case**: Demonstrates how to prove knowledge of a unique value without revealing it
+
 ### **The Smart Contract** (`contracts/SimpleCounter.sol`)
 - Stores a counter value on-chain
-- Accepts zero-knowledge proofs to increment the counter
+- Accepts zero-knowledge proofs of uniqueness constraints
 - Verifies proofs using the auto-generated Solidity verifier
-- Emits events for successful verifications
+- Increments the counter only when valid proofs are submitted
 
 ### **The Tests** (`test/SimpleCounter.ts`)
-- Dynamically generates proofs for different input values
-- Tests both valid and invalid proof scenarios
+- Dynamically generates proofs with different combinations of `x`, `y`, `z` values
 - Demonstrates proof format conversion (binary ↔ JSON)
-- Verifies end-to-end integration between circuits and contracts
+- Verifies end-to-end integration between uniqueness circuits and smart contracts
+- Shows how private values can remain hidden while proving constraints
 
 ## 🌐 Deployment
 
@@ -187,8 +189,6 @@ yarn contracts:deploy
 The deployment uses **Hardhat Ignition** for:
 - ✅ Reproducible deployments
 - ✅ Automatic verification on Etherscan
-- ✅ State management and rollback capabilities
-- ✅ Multi-network deployment support
 
 ## 🧪 Development Workflow
 
