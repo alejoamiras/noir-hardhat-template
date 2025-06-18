@@ -6,8 +6,8 @@ import { expect } from "chai";
 import hre from "hardhat";
 import { UltraHonkBackend } from "@aztec/bb.js";
 import { CompiledCircuit, Noir } from "@noir-lang/noir_js";
-import main from "../circuits/step5/target/step5.json";
-// import publicInputs from "../circuits/step5/target/public_inputs_fields.json";
+import main from "../circuit/target/num_diff.json";
+import publicInputs from "../circuit/target/public_inputs_fields.json";
 import path from "path";
 import fs from "fs";
 
@@ -35,11 +35,10 @@ describe("SimpleCounter", function () {
     beforeEach(async function () {
       this.fixtureVariables = await loadFixture(deploySimpleCounterFixture);
     });
-    it.only("should generate several valid proofs and update the counter", async function () {
-      const { noir, backend, verifier, simpleCounter } = this.fixtureVariables as {
+    it("should generate several valid proofs and update the counter", async function () {
+      const { noir, backend, simpleCounter } = this.fixtureVariables as {
         noir: Noir;
         backend: UltraHonkBackend;
-        verifier: any;
         simpleCounter: any; // Replace 'any' with your actual contract type if available
       };
 
@@ -47,19 +46,17 @@ describe("SimpleCounter", function () {
       expect(currentCounter).to.equal(0n);
 
       for(let i = 1; i < 11; i++) {
-        // console.log("Defining input...");
-        const input = { x: i, y: i + 1 };
-        // console.log("Generating witness...");
+        
+        const input = { x: i, y: i + 1, z: i };
+        
         const { witness } = await noir.execute(input);
-        // console.log("Generating proof...");
+        
         const proof = await backend.generateProof(witness, { keccak: true});
         const verification = await backend.verifyProof(proof, { keccak: true})
         expect(verification).to.equal(true);
         
         // Convert proof to hex string with 0x prefix
-        const proofHex = '0x' + Array.from(proof.proof)
-        .map(byte => byte.toString(16).padStart(2, '0'))
-        .join('');
+        const proofHex = '0x' + Buffer.from(proof.proof).toString('hex');
         
         await simpleCounter.write.updateCounterIfVerified([proofHex, proof.publicInputs]);
         
@@ -74,36 +71,45 @@ describe("SimpleCounter", function () {
     beforeEach(async function () {
       this.fixtureVariables = await loadFixture(deploySimpleCounterFixture);
     });
-    it("should validate proof and update the counter", async function () {
-      const { backend, simpleCounter } = this.fixtureVariables as {
-        backend: UltraHonkBackend;
-        simpleCounter: any; // Replace 'any' with your actual contract type if available
-      };
-
-      let currentCounter = await simpleCounter.read.counter();
-      expect(currentCounter).to.equal(0n);
-
-      const proofBuffer = fs.readFileSync(path.join(__dirname, '../circuits/step5/target/proof'));
-      const proof = '0x' + proofBuffer.toString('hex');
-
-      // The proof needs to be a hex string with 0x prefix for the contract call
-      // But needs to be a Uint8Array without 0x prefix for verification
-      const proofBytes = Buffer.from(proof.startsWith('0x') ? proof.slice(2) : proof, 'hex');
+    describe("reading from jsons", function () {
+      it("should read from jsons", async function () {
+      })
+    })
+    describe("reading from bytes", function () {
+      it("should validate proof and update the counter", async function () {
+        const { backend, simpleCounter } = this.fixtureVariables as {
+          backend: UltraHonkBackend;
+          simpleCounter: any; // Replace 'any' with your actual contract type if available
+        };
+  
+        let currentCounter = await simpleCounter.read.counter();
+        expect(currentCounter).to.equal(0n);
+  
+        const proofBuffer = fs.readFileSync(path.join(__dirname, '../circuit/target/proof'));
+        const proof = '0x' + proofBuffer.toString('hex');
       
-      // const verification = await backend.verifyProof({ 
-      //   proof: proofBytes,
-      //   publicInputs
-      // });
-      // console.log('verified?', verification);
+        const publicInputsBuffer = fs.readFileSync(path.join(__dirname, '../circuit/target/public_inputs'));
+        const publicInputsArray = Array.from(
+          { length: Math.floor(publicInputsBuffer.length / 32) },
+          (_, i) => '0x' + publicInputsBuffer.subarray(i * 32, (i + 1) * 32).toString('hex')
+        );
 
-      // For contract call, keep proof as hex string with 0x prefix
-      // await simpleCounter.write.updateCounterIfVerified([
-      //   proof,
-      //   publicInputs
-      // ]);
-
-      currentCounter = await simpleCounter.read.counter();
-      expect(currentCounter).to.equal(1n);
-    });
+        const verification = await backend.verifyProof({ 
+          proof: proofBuffer,
+          publicInputs: publicInputsArray,
+        }, { keccak: true});
+        expect(verification).to.equal(true);
+        
+  
+        // // For contract call, keep proof as hex string with 0x prefix
+        await simpleCounter.write.updateCounterIfVerified([
+          proof,
+          publicInputsArray
+        ]);
+  
+        currentCounter = await simpleCounter.read.counter();
+        expect(currentCounter).to.equal(1n);
+      });
+    })
   });
 });

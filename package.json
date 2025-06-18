@@ -22,5 +22,16 @@
     "typescript": "~5.0.4",
     "viem": "^2.31.0"
   },
+  "scripts": {
+    "circuit:build": "cd circuit && nargo build",
+    "circuit:witness": "cd circuit && nargo execute witness",
+    "circuit:vk": "cd circuit && bb write_vk -b ./target/num_diff.json -o ./target --oracle_hash keccak",
+    "circuit:solidity_verifier": "cd circuit && bb write_solidity_verifier -vk ./target/vk -o ../contracts/VerifierKeccak.sol",
+    "circuit:prove": "cd circuit && bb prove -b ./target/num_diff.json -w ./target/witness.gz -o ./target --output_format bytes_and_fields --oracle_hash keccak",
+    "circuit:verify": "cd circuit && bb verify -k ./target/vk -p ./target/proof --oracle_hash keccak",
+    "circuit:test": "cd circuit && nargo test",
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test"
+  },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
