@@ -17,7 +17,7 @@ describe("SimpleCounter", function () {
 
     const noir = new Noir(main as CompiledCircuit);
     const backend = new UltraHonkBackend(main.bytecode, { threads: 4 });
-    const verifier = await hre.viem.deployContract("HonkVerifierKeccak");
+    const verifier = await hre.viem.deployContract("HonkVerifier");
     const simpleCounter = await hre.viem.deployContract("SimpleCounter", [verifier.address]);
     const publicClient = await hre.viem.getPublicClient();
 

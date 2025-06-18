@@ -1,9 +1,9 @@
 {
   "name": "what-is-noir-step5",
   "devDependencies": {
-    "@aztec/bb.js": "0.82.2",
-    "@noir-lang/noir_js": "1.0.0-beta.3",
-    "@noir-lang/noir_wasm": "1.0.0-beta.3",
+    "@aztec/bb.js": "0.84.0",
+    "@noir-lang/noir_js": "1.0.0-beta.6",
+    "@noir-lang/noir_wasm": "1.0.0-beta.6",
     "@nomicfoundation/hardhat-ignition": "^0.15.11",
     "@nomicfoundation/hardhat-ignition-viem": "^0.15.11",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.12",
