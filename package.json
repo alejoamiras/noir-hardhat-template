@@ -35,8 +35,8 @@
     "circuit:verify": "cd circuit && bb verify -k ./target/vk -p ./target/proof --oracle_hash keccak",
     "circuit:test": "cd circuit && nargo test",
     "contracts:deploy": "npx hardhat ignition deploy ./ignition/modules/SimpleCounter.ts --network sepolia --verify",
-    "contracts:compile": "npx hardhat compile",
-    "contracts:test": "npx hardhat test",
+    "contracts:compile": "COMPILE=true npx hardhat compile",
+    "contracts:test": "TEST=true npx hardhat test",
     "commitlint": "commitlint --edit",
     "commitlint:last": "commitlint --from HEAD~1 --to HEAD --verbose",
     "prepare": "husky"
