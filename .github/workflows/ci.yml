@@ -7,7 +7,6 @@ on:
     branches: [ main ]
 
 jobs:
-  # Job 1: Check commit messages
   Lint:
     name: Check Commit Messages
     runs-on: ubuntu-latest
@@ -34,7 +33,6 @@ jobs:
         if: github.event_name == 'push'
         run: npx --no -- commitlint --from=HEAD~1
 
-  # Job 2: Circuit build
   circuit-build:
     name: Circuit Build
     runs-on: ubuntu-latest
@@ -66,7 +64,6 @@ jobs:
           path: circuit/target/
           retention-days: 1
 
-  # Job 3: Circuit test
   circuit-test:
     name: Circuit Test
     runs-on: ubuntu-latest
@@ -91,7 +88,6 @@ jobs:
       - name: Run circuit tests
         run: yarn circuit:test
 
-  # Job 4: Circuit prove and verify
   circuit-prove-verify:
     name: Circuit Prove & Verify
     runs-on: ubuntu-latest
@@ -114,16 +110,9 @@ jobs:
       - name: Install Barretenberg
         shell: bash
         run: |
-          mkdir -p $HOME/.bb
-          curl -L -o $HOME/.bb/bbup_installer https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/bbup/install
-          echo "Installer downloaded..."
-          chmod +x $HOME/.bb/bbup_installer
-          echo "Installer made executable..."
-          bash $HOME/.bb/bbup_installer
-          echo "bbup installed..."
+          curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/bbup/install | bash
           echo "${HOME}/.bb" >> $GITHUB_PATH
-          echo "Added ${HOME}/.bb to PATH"
-          bash $HOME/.bb/bbup -nv 1.0.0-beta.6
+          bash $HOME/.bb/bbup -nv $(nargo -V | head -n1 | awk '{print $4}')
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -146,7 +135,6 @@ jobs:
       - name: Verify proof
         run: yarn circuit:verify
 
-  # Job 5: Contracts compile
   contracts-compile:
     name: Contracts Compile
     runs-on: ubuntu-latest
@@ -175,7 +163,6 @@ jobs:
             cache/
           retention-days: 1
 
-  # Job 6: Contracts test
   contracts-test:
     name: Contracts Test
     runs-on: ubuntu-latest
