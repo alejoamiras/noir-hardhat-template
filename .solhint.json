@@ -1,0 +1,29 @@
+{
+  "extends": "solhint:recommended",
+  "plugins": [],
+  "rules": {
+    "compiler-version": ["error", "^0.8.0"],
+    "func-visibility": ["warn", { "ignoreConstructors": true }],
+    "avoid-suicide": "error",
+    "avoid-sha3": "warn",
+    "avoid-throw": "warn",
+    "avoid-tx-origin": "error",
+    "no-console": "error",
+    "max-line-length": ["warn", 120],
+    "max-states-count": ["warn", 15],
+    "reason-string": ["warn", { "maxLength": 64 }],
+    "constructor-syntax": "warn",
+    "quotes": ["error", "double"],
+    "const-name-snakecase": "error",
+    "func-name-mixedcase": "error",
+    "func-param-name-mixedcase": "error",
+    "modifier-name-mixedcase": "error",
+    "var-name-mixedcase": "error",
+    "private-vars-leading-underscore": ["warn", { "strict": false }],
+    "imports-on-top": "error",
+    "ordering": "warn",
+    "visibility-modifier-order": "error",
+    "no-empty-blocks": "warn",
+    "no-unused-vars": "warn"
+  }
+}

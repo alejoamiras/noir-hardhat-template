@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+coverage/
+typechain-types/
+
+# Hardhat files
+cache/
+artifacts/
+
+# Circuit build files
+circuit/target/
+
+# Ignition deployments
+ignition/deployments/
+
+# Environment files
+.env
+.env.*
+
+# Lock files (already formatted by package managers)
+yarn.lock
+package-lock.json 

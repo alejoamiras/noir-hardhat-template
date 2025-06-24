@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Hardhat files
+cache/
+artifacts/
+
+# Generated verifier contracts
+contracts/VerifierKeccak.sol
+
+# Build outputs
+typechain-types/ 
