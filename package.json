@@ -33,6 +33,7 @@
     "circuit:solidity_verifier": "cd circuit && bb write_solidity_verifier -vk ./target/vk -o ../contracts/VerifierKeccak.sol",
     "circuit:prove": "cd circuit && bb prove -b ./target/num_diff.json -w ./target/witness.gz -o ./target --output_format bytes_and_fields --oracle_hash keccak",
     "circuit:verify": "cd circuit && bb verify -k ./target/vk -p ./target/proof --oracle_hash keccak",
+    "circuit:all": "yarn circuit:build && yarn circuit:witness && yarn circuit:vk && yarn circuit:solidity_verifier && yarn circuit:prove && yarn circuit:verify",
     "circuit:test": "cd circuit && nargo test",
     "contracts:deploy": "npx hardhat ignition deploy ./ignition/modules/SimpleCounter.ts --network sepolia --verify",
     "contracts:compile": "npx hardhat compile",
