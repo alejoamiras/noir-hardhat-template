@@ -36,6 +36,8 @@
   },
   "scripts": {
     "vars:list": "npx hardhat vars list",
+    "circuit:lint": "cd circuit && nargo fmt --check",
+    "circuit:lint:fix": "cd circuit && nargo fmt",
     "circuit:build": "cd circuit && nargo build",
     "circuit:witness": "cd circuit && nargo execute witness",
     "circuit:vk": "cd circuit && bb write_vk -b ./target/num_diff.json -o ./target --oracle_hash keccak",
@@ -57,14 +59,18 @@
     "solidity:lint:fix": "npx hardhat check --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "lint:all": "yarn typescript:lint && yarn solidity:lint && yarn format:check"
+    "all:lint": "yarn typescript:lint && yarn solidity:lint && yarn circuit:lint && yarn format:check"
   },
   "lint-staged": {
     "*.{js,mjs,ts,tsx}": [
       "eslint --fix",
       "prettier --write"
     ],
+    "*.nr": [
+      "cd circuit && nargo fmt"
+    ],
     "*.sol": [
+      "npx hardhat check --fix",
       "prettier --write"
     ],
     "*.{json,md,yml,yaml}": [
