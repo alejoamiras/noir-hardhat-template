@@ -4,6 +4,5 @@ fn main(x: Field, y: pub Field, z: pub Field) {
 
 #[test]
 fn test_main() {
-    main(1, 
-    2, 1);
+    main(1, 2, 1);
 }
