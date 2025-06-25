@@ -12,14 +12,23 @@
     "@nomicfoundation/hardhat-toolbox-viem": "^4.0.0",
     "@nomicfoundation/hardhat-verify": "^2.0.14",
     "@nomicfoundation/hardhat-viem": "^2.0.6",
+    "@nomiclabs/hardhat-solhint": "^4.0.2",
     "@types/chai": "^4.3.20",
     "@types/chai-as-promised": "^7.1.8",
     "@types/mocha": ">=9.1.0",
     "@types/node": ">=18.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.35.0",
+    "@typescript-eslint/parser": "^8.35.0",
     "chai": "^4.5.0",
+    "eslint": "^9.29.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.0",
     "hardhat": "^2.25.0",
     "hardhat-gas-reporter": "^2.3.0",
     "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "prettier": "^3.6.0",
+    "solhint": "^5.1.0",
     "solidity-coverage": "^0.8.16",
     "ts-node": ">=10.9.2",
     "typescript": "~5.8.3",
@@ -38,9 +47,29 @@
     "contracts:deploy": "npx hardhat ignition deploy ./ignition/modules/SimpleCounter.ts --network sepolia --verify",
     "contracts:compile": "npx hardhat compile",
     "contracts:test": "npx hardhat test",
+    "contracts:lint": "npx hardhat check",
     "commitlint": "commitlint --edit",
     "commitlint:last": "commitlint --from HEAD~1 --to HEAD --verbose",
-    "prepare": "husky"
+    "prepare": "husky",
+    "typescript:lint": "eslint .",
+    "typescript:lint:fix": "eslint . --fix",
+    "solidity:lint": "npx hardhat check",
+    "solidity:lint:fix": "npx hardhat check --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint:all": "yarn typescript:lint && yarn solidity:lint && yarn format:check"
+  },
+  "lint-staged": {
+    "*.{js,mjs,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.sol": [
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

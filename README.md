@@ -10,14 +10,14 @@ A comprehensive boilerplate that seamlessly integrates [Noir](https://noir-lang.
 - **🚀 CI/CD Pipeline** - Automated testing, building, and validation
 - **📦 Multiple Proof Formats** - Handle proofs in JSON and binary
 - **🌐 Deployment Ready** - Hardhat Ignition integration for seamless deployment
-- **📋 Code Quality** - Commitlint + Husky for conventional commits and code standards
+- **📋 Code Quality** - ESLint, Solhint, Prettier, Commitlint + Husky for comprehensive code standards
 
 ## 🏗️ What You'll Learn
 
 This template demonstrates a complete **SimpleCounter** example that showcases:
 
 - **Circuit Development**: Create a Noir circuit that verifies arithmetic operations
-- **Proof Generation**: Generate zero-knowledge proofs using the `bb` proving system  
+- **Proof Generation**: Generate zero-knowledge proofs using the `bb` proving system
 - **Smart Contract Verification**: Verify proofs on-chain using auto-generated Solidity verifiers
 - **Full-Stack Integration**: TypeScript tests that create, verify, and submit proofs dynamically
 - **Production Deployment**: Deploy and interact with your ZK application on Ethereum testnets
@@ -44,6 +44,7 @@ bb --version
 ## 🚀 Quick Start
 
 1. **Clone and Install**
+
    ```bash
    git clone <repository-url>
    cd noir-hardhat-template
@@ -51,25 +52,28 @@ bb --version
    ```
 
 2. **Build the Circuit**
+
    ```bash
    yarn circuit:build
    ```
 
 3. **Test Everything**
+
    ```bash
    # Test the Noir circuit
    yarn circuit:test
-   
+
    # Test smart contracts with proof verification
    yarn contracts:test
    ```
 
 4. **Generate and Verify Proofs**
+
    ```bash
    # Generate witness and verification key
    yarn circuit:witness
    yarn circuit:vk
-   
+
    # Create and verify a proof
    yarn circuit:prove
    yarn circuit:verify
@@ -99,6 +103,7 @@ noir-hardhat-template/
 ## 🛠️ Available Scripts
 
 ### Circuit Operations
+
 ```bash
 yarn circuit:build              # Compile Noir circuit
 yarn circuit:test               # Run circuit tests
@@ -110,6 +115,7 @@ yarn circuit:solidity_verifier # Generate Solidity verifier contract
 ```
 
 ### Smart Contract Operations
+
 ```bash
 yarn contracts:compile         # Compile Solidity contracts
 yarn contracts:test           # Run smart contract tests
@@ -117,10 +123,63 @@ yarn contracts:deploy         # Deploy to Sepolia testnet
 ```
 
 ### Development Tools
+
 ```bash
 yarn commitlint               # Validate commit messages
 yarn commitlint:last          # Check last commit message
+yarn lint                     # Run ESLint on TypeScript files
+yarn lint:fix                 # Auto-fix ESLint issues
+yarn format                   # Format code with Prettier
+yarn format:check            # Check formatting without changes
+yarn lint:all                # Run linting and format check
 ```
+
+## 🎨 Code Quality
+
+This template includes comprehensive linting and formatting tools to maintain code quality:
+
+### **TypeScript Linting** (ESLint)
+
+- Configured with TypeScript-specific rules and best practices
+- Integrates with Prettier for consistent formatting
+- Catches potential bugs and enforces coding standards
+- Run with `yarn lint` or auto-fix with `yarn lint:fix`
+
+### **Solidity Linting** (Solhint)
+
+- Enforces Solidity best practices and security patterns
+- Configured with recommended rules for modern Solidity development
+- Run with `npx hardhat check`
+- Auto-generated verifier contracts are excluded from linting
+
+### **Code Formatting** (Prettier)
+
+- Ensures consistent code style across TypeScript, Solidity, JSON, and Markdown
+- Configured with sensible defaults for each file type
+- Run with `yarn format` or check with `yarn format:check`
+
+### **Pre-commit Hooks**
+
+- Automatically runs linting and formatting on staged files
+- Prevents committing code that doesn't meet quality standards
+- Powered by Husky and lint-staged
+
+### **CI Integration**
+
+The CI pipeline includes dedicated jobs for:
+
+- TypeScript linting
+- Solidity linting
+- Formatting verification
+- Commit message validation
+
+### **Noir Language Support**
+
+Currently, there are no dedicated linting tools for Noir. However:
+
+- VSCode users can install the `vscode-noir` extension for syntax highlighting and LSP support
+- NeoVim users can use the `noir-nvim` plugin
+- The Language Server Protocol (LSP) provides basic error checking via `nargo lsp`
 
 ## 🔄 CI/CD Pipeline
 
@@ -129,7 +188,10 @@ Our GitHub Actions pipeline ensures code quality and functionality across all co
 ### **Automated Workflows**
 
 - **🔍 Commit Validation** - Enforces conventional commit standards on all PRs and pushes
-- **🔧 Circuit Build** - Compiles Noir circuits and caches artifacts  
+- **✨ TypeScript Linting** - ESLint checks for code quality and potential bugs
+- **🔒 Solidity Linting** - Solhint enforces best practices and security patterns
+- **🎨 Format Check** - Prettier ensures consistent code formatting
+- **🔧 Circuit Build** - Compiles Noir circuits and caches artifacts
 - **🧪 Circuit Testing** - Runs all circuit tests with Noir toolchain
 - **🔐 Proof Generation & Verification** - Full prove/verify cycle validation
 - **📝 Contract Compilation** - Compiles Solidity contracts with optimizations
@@ -140,6 +202,7 @@ Our GitHub Actions pipeline ensures code quality and functionality across all co
 The **SimpleCounter** demonstrates a complete ZK application workflow:
 
 ### **The Circuit** (`circuit/src/main.nr`)
+
 ```noir
 fn main(x: Field, y: pub Field, z: pub Field) {
     assert((x != y) & (y != z));
@@ -152,18 +215,21 @@ fn test_main() {
 ```
 
 This circuit implements a **uniqueness constraint verification**:
+
 - **Private Input** (`x`): A secret value known only to the prover
 - **Public Inputs** (`y`, `z`): Values that are publicly known and verified
 - **Constraint**: Proves that `x` is different from `y` AND `y` is different from `z`
 - **Use Case**: Demonstrates how to prove knowledge of a unique value without revealing it
 
 ### **The Smart Contract** (`contracts/SimpleCounter.sol`)
+
 - Stores a counter value on-chain
 - Accepts zero-knowledge proofs of uniqueness constraints
 - Verifies proofs using the auto-generated Solidity verifier
 - Increments the counter only when valid proofs are submitted
 
 ### **The Tests** (`test/SimpleCounter.ts`)
+
 - Dynamically generates proofs with different combinations of `x`, `y`, `z` values
 - Demonstrates proof format conversion (binary ↔ JSON)
 - Verifies end-to-end integration between uniqueness circuits and smart contracts
@@ -172,6 +238,7 @@ This circuit implements a **uniqueness constraint verification**:
 ## 🌐 Deployment
 
 ### **Environment Setup**
+
 Configure your deployment environment:
 
 ```bash
@@ -182,11 +249,13 @@ npx hardhat vars set ETHERSCAN_API_KEY
 ```
 
 ### **Deploy to Sepolia**
+
 ```bash
 yarn contracts:deploy
 ```
 
 The deployment uses **Hardhat Ignition** for:
+
 - ✅ Reproducible deployments
 - ✅ Automatic verification on Etherscan
 
